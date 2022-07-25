@@ -12,7 +12,7 @@ from pyrogram.types import (InlineKeyboardButton,
                             InlineKeyboardMarkup, Message)
 
 from spr import SUDOERS, arq, spr
-from spr.utils.db import c
+from spr.utils.db import conn
 
 __MODULE__ = "Devs"
 __HELP__ = """
@@ -25,7 +25,7 @@ __HELP__ = """
 /whitelist [CHAT_ID|USER_ID] - Whitelist a chat/user.
 """
 
-c = c
+conn = conn
 p = print
 arq = arq
 
@@ -49,7 +49,8 @@ async def edit_or_reply(msg: Message, **kwargs):
     & ~filters.forwarded
     & ~filters.via_bot
     & ~filters.edited
-    & filters.command("eval")
+    & filters.command("eval"),
+    group=50,
 )
 async def executor(client, message):
     try:
@@ -132,6 +133,7 @@ async def runtime_func_cq(_, cq):
     & ~filters.via_bot
     & ~filters.edited
     & filters.command("sh"),
+    group=50,
 )
 async def shellrunner(client, message):
     if len(message.command) < 2:
